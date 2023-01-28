@@ -1,7 +1,7 @@
 # [START cloudbuild-delivery]
 steps:
 # This step deploys the new version of our container image
-# in the hello-cloudbuild Kubernetes Engine cluster.
+# in the wio-cluster Kubernetes Engine cluster.
 - name: 'gcr.io/cloud-builders/kubectl'
   id: Deploy
   args:
@@ -10,7 +10,7 @@ steps:
   - 'kubernetes.yaml'
   env:
   - 'CLOUDSDK_COMPUTE_REGION=us-central1'
-  - 'CLOUDSDK_CONTAINER_CLUSTER=hello-cloudbuild'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=wio-cluster'
 
 # This step copies the applied manifest to the production branch
 # The COMMIT_SHA variable is automatically
