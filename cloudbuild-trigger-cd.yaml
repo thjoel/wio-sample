@@ -14,7 +14,7 @@ steps:
   args:
   - 'build'
   - '-t'
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:$SHORT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/my-repository/wio-docker:$SHORT_SHA'
   - '.'
 
 # This step pushes the image to Artifact Registry
@@ -24,19 +24,19 @@ steps:
   id: Push
   args:
   - 'push'
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:$SHORT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/my-repository/wio-docker:$SHORT_SHA'
 # [END cloudbuild]
 
 # [START cloudbuild-trigger-cd]
-# This step clones the hello-cloudbuild-env repository
+# This step clones the wio-repo-env repository
 - name: 'gcr.io/cloud-builders/gcloud'
   id: Clone env repository
   entrypoint: /bin/sh
   args:
   - '-c'
   - |
-    gcloud source repos clone hello-cloudbuild-env && \
-    cd hello-cloudbuild-env && \
+    gcloud source repos clone wio-repo-env && \
+    cd wio-repo-env && \
     git checkout candidate && \
     git config user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)')
 
@@ -48,9 +48,9 @@ steps:
   - '-c'
   - |
      sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kubernetes.yaml.tpl | \
-     sed "s/COMMIT_SHA/${SHORT_SHA}/g" > hello-cloudbuild-env/kubernetes.yaml
+     sed "s/COMMIT_SHA/${SHORT_SHA}/g" > wio-app-env/kubernetes.yaml
 
-# This step pushes the manifest back to hello-cloudbuild-env
+# This step pushes the manifest back to wio-app-env
 - name: 'gcr.io/cloud-builders/gcloud'
   id: Push manifest
   entrypoint: /bin/sh
@@ -58,10 +58,10 @@ steps:
   - '-c'
   - |
     set -x && \
-    cd hello-cloudbuild-env && \
+    cd wio-app-env && \
     git add kubernetes.yaml && \
-    git commit -m "Deploying image us-central1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:${SHORT_SHA}
-    Built from commit ${COMMIT_SHA} of repository hello-cloudbuild-app
+    git commit -m "Deploying image us-central1-docker.pkg.dev/$PROJECT_ID/my-repository/wio-docker:${SHORT_SHA}
+    Built from commit ${COMMIT_SHA} of repository wio-repo-app
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
     git push origin candidate
 
