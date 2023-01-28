@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-cloudbuild
+  name: wio-k8s
   labels:
-    app: hello-cloudbuild
+    app: wio-k8s
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hello-cloudbuild
+      app: wio-k8s
   template:
     metadata:
       labels:
-        app: hello-cloudbuild
+        app: wio-k8s
     spec:
       containers:
-      - name: hello-cloudbuild
-        image: us-central1-docker.pkg.dev/GOOGLE_CLOUD_PROJECT/my-repository/hello-cloudbuild:COMMIT_SHA
+      - name: wio-k8s
+        image: us-central1-docker.pkg.dev/GOOGLE_CLOUD_PROJECT/my-repository/wio-docker:COMMIT_SHA
         ports:
         - containerPort: 8080
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: hello-cloudbuild
+  name: wio-k8s
 spec:
   selector:
-    app: hello-cloudbuild
+    app: wio-k8s
   ports:
   - protocol: TCP
     port: 80
