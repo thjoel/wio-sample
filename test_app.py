@@ -1,9 +1,9 @@
 import unittest
-from app import hello
+from app import launch
 
-class TestHelloApp(unittest.TestCase):
+class TestLaunchApp(unittest.TestCase):
 
-  def test_hello(self):
+  def test_launch(self):
     self.assertEqual(launch(), "Done.")
 
 if __name__ == '__main__':
