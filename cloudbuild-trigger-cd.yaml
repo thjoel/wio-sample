@@ -36,7 +36,7 @@ steps:
   - '-c'
   - |
     gcloud source repos clone wio-repo-env && \
-    cd wio-repo-env && \
+    cd wio-sample-env && \
     git checkout candidate && \
     git config user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)')
 
@@ -48,7 +48,7 @@ steps:
   - '-c'
   - |
      sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kubernetes.yaml.tpl | \
-     sed "s/COMMIT_SHA/${SHORT_SHA}/g" > wio-app-env/kubernetes.yaml
+     sed "s/COMMIT_SHA/${SHORT_SHA}/g" > wio-sample-env/kubernetes.yaml
 
 # This step pushes the manifest back to wio-app-env
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -58,7 +58,7 @@ steps:
   - '-c'
   - |
     set -x && \
-    cd wio-app-env && \
+    cd wio-sample-env && \
     git add kubernetes.yaml && \
     git commit -m "Deploying image us-central1-docker.pkg.dev/$PROJECT_ID/my-repository/wio-docker:${SHORT_SHA}
     Built from commit ${COMMIT_SHA} of repository wio-repo-app
